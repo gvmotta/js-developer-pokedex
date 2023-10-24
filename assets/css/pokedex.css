@@ -1,13 +1,16 @@
 body {
     background-color: #DEE3EC;
 }
+.no-link-style {
+    text-decoration: none;
+    color: inherit;
+}
 section {
     width: 400px;
     margin: 40px auto;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
-
 }
 header {
     display: flex;
@@ -103,4 +106,8 @@ h1 {
     height: 110px;
     width: 110px;
     filter: grayscale(100%) brightness(1000%);
+}
+.loadMoreButton{
+    display: flex;
+    margin: 1rem auto 1rem;
 }

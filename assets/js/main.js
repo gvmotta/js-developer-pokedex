@@ -23,19 +23,21 @@ function loadMoreItems(offset, limit) {
     pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
         const newHtml = pokemons.map((pokemon) => `
                 <li class="${pokemon.type}">
-                    <span class="number">#${pokemon.number}</span>
-                    <span class="name">${pokemon.name}</span>
-                    <div class="details">
-                        <div class="poke-types">
-                            ${pokemon.types.map((type) => `<span class="type">${type}</span>`).join('')}
+                    <a class="no-link-style" href="#">
+                        <span class="number">#${pokemon.number}</span>
+                        <span class="name">${pokemon.name}</span>
+                        <div class="details">
+                            <div class="poke-types">
+                                ${pokemon.types.map((type) => `<span class="type">${type}</span>`).join('')}
+                            </div>
+                            <div class="pokemon-img">
+                                <img src="${pokemon.photo}" alt="${pokemon.name}">
+                            </div>
                         </div>
-                        <div class="pokemon-img">
-                            <img src="${pokemon.photo}" alt="${pokemon.name}">
+                        <div class="pokeball-img">
+                            <img src="assets/poke_ball_icon.png" alt="Pokeball background image">
                         </div>
-                    </div>
-                    <div class="pokeball-img">
-                        <img src="assets/poke_ball_icon.png" alt="Pokeball background image">
-                    </div>
+                    </a>
                 </li>
         `).join('')
         pokemonList.innerHTML += newHtml
