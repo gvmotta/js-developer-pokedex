@@ -1,0 +1,91 @@
+header {
+    display: flex;
+    justify-content: space-between;
+}
+header i {
+    margin: 20px;
+    color: white;
+    font-size: 25px;
+    justify-content: space-between;
+}
+.col {
+    display: flex;
+    justify-content: space-between;
+}
+.top-side {
+    color: white;
+    margin: 0 20px 250px;
+    position: relative;
+}
+.top-side .pokemon-name {
+    font-size: 2rem;    
+    margin: 1rem 0;
+}
+.top-side .type {
+    padding: 4px 12px;
+    margin: 0 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+.right-side {
+    display: flex;
+    align-items: center;
+}
+.right-side .number {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.poke-img {
+    position: absolute;
+    display: block;
+    margin: 2rem auto 0;
+    top: 115px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+.pokeball-img {
+    position: absolute;
+    filter: grayscale(100%) brightness(1000%);
+    top: 80px;
+    right: -80px;
+    opacity: 0.5;
+    height: 300px;
+}
+.bot-side {
+    background-color: #fff;
+    border-radius: 20px 20px 0 0;
+}
+.bot-side .nav-bar {
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    font-weight: 400;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0 20px 20px;
+}
+table {
+    margin: 0 1rem;
+}
+td {
+    padding: .5rem 1rem; /* Espaçamento interno das células */
+    font-weight: 500;
+}
+.first-table {
+    margin: 0 1rem 1rem;
+}
+.breeding {
+    margin: 0 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.info {
+    color: rgba(0, 0, 0, 0.7);
+}
+.second-table {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
