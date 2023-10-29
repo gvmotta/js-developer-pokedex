@@ -80,6 +80,8 @@ h1 {
     margin: 0.3rem 0;
     color: rgba(255, 255, 255, 0.8);
     font-weight: bold;
+    text-transform: capitalize;
+    text-align: center;
 }
 .pokemons .details .pokemon-img {
     display: flex;

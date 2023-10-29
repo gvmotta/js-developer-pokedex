@@ -1,6 +1,14 @@
 const pokeApi = {}
 const offset = 0;
 const limit = 10;
+
+pokeApi.getPokemonDetail = function (pokemon) {
+    return fetch(pokemon.url) // caminha por todos os pokemons, e retorna o fetch de cada um deles
+        .then(function (response) {
+            return response.json(); // transforma o fetch de cada pokemon em json
+        })
+}
+
 pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons para pokeApi
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
     return fetch(url)
@@ -10,6 +18,13 @@ pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons
         }) // após isso retorna response em json para a próxima função
         .then(function (jsonBody) {
             return jsonBody.results; // retorna para a prox função apenas a parte dos resultados do jsonBody, que é o que interessa
+        })
+        .then(function (pokemons){
+            return pokemons.map(pokeApi.getPokemonDetail) // mapeia todos os fetchs de todos os pokemons, e retorna um json de cada um deles, dessa forma teremos todos os detalhes de todos os pokemons
+        }).then(function (detailRequests) {
+            return Promise.all(detailRequests); // promise.all recebe um array de promessas e retorna uma nova promessa resolvida
+        }).then(function (pokemonsDetails) {
+            return pokemonsDetails;
         })
         .catch(function (error) {
             console.log(error)
@@ -24,14 +39,14 @@ function convertendoJsonPokemonToHtml(pokemon) {
     return `
         <li class="grass">
             <a class="no-link-style" href="#">
-                <span class="number">${pokemon.number}</span>
+                <span class="number">${pokemon.order}</span>
                 <span class="name">${pokemon.name}</span>
                 <div class="details">
                     <div class="poke-types">
-                        <span class="type">Grass</span>
+                        ${allTheTypes(pokemon.types).join('')}
                     </div>
                     <div class="pokemon-img">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg" alt="${pokemon.name}">
+                        <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
                     </div>
                 </div>
                 <div class="pokeball-img">
@@ -40,6 +55,14 @@ function convertendoJsonPokemonToHtml(pokemon) {
             </a>
         </li>
     `
+}
+
+function allTheTypes(pokemonTypes) {
+    return pokemonTypes.map(function (type){
+        return `
+            <span class="type">${type.type.name}</span>
+        `
+        })
 }
 
 const listaPokemonOl = document.getElementById('listaPokemons');
