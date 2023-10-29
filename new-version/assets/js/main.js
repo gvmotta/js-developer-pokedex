@@ -2,11 +2,32 @@ const pokeApi = {}
 const offset = 0;
 const limit = 10;
 
+class Pokemon {
+    number;
+    name;
+    color;
+    types = []
+}
+
+function convertPokeApiDetailToPokemon(pokeDetail) {
+    const pokemon = new Pokemon();
+    pokemon.number = pokeDetail.order;
+    pokemon.name = pokeDetail.name;
+    const types = pokeDetail.types.map(function (specificType) {
+        specificType.type.name;
+    })
+    const [type] = types;
+    pokemon.types = types;
+    pokemon.type = type;
+    pokemon.photo = pokeDetail.sprites.other.dream_world.front_default;
+    return pokemon;
+}
+
 pokeApi.getPokemonDetail = function (pokemon) {
     return fetch(pokemon.url) // caminha por todos os pokemons, e retorna o fetch de cada um deles
         .then(function (response) {
             return response.json(); // transforma o fetch de cada pokemon em json
-        })
+        }).then(convertPokeApiDetailToPokemon)
 }
 
 pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons para pokeApi
@@ -43,10 +64,12 @@ function convertendoJsonPokemonToHtml(pokemon) {
                 <span class="name">${pokemon.name}</span>
                 <div class="details">
                     <div class="poke-types">
-                        ${allTheTypes(pokemon.types).join('')}
+                        ${pokemon.types.map(function (type) {
+                            return '<li class="type">${type}</li>';
+                        }).join('')}
                     </div>
                     <div class="pokemon-img">
-                        <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
+                        <img src="${pokemon.photo}" alt="${pokemon.name}">
                     </div>
                 </div>
                 <div class="pokeball-img">
@@ -55,14 +78,6 @@ function convertendoJsonPokemonToHtml(pokemon) {
             </a>
         </li>
     `
-}
-
-function allTheTypes(pokemonTypes) {
-    return pokemonTypes.map(function (type){
-        return `
-            <span class="type">${type.type.name}</span>
-        `
-        })
 }
 
 const listaPokemonOl = document.getElementById('listaPokemons');
