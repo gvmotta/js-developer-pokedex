@@ -1,6 +1,6 @@
 const pokeApi = {}
 let offset = 0;
-const limit = 10;
+let limit = 10;
 
 pokeApi.getPokemonDetail = function (pokemon) {
     return fetch(pokemon.url) // caminha por todos os pokemons, e retorna o fetch de cada um deles
@@ -10,6 +10,7 @@ pokeApi.getPokemonDetail = function (pokemon) {
 }
 
 pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons para pokeApi
+    console.log(`offset: ${offset} limit: ${limit}`)
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
     return fetch(url)
         .then(function (response) { // quando dar o fetch, retorna response
@@ -38,8 +39,8 @@ pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons
 function convertendoJsonPokemonToHtml(pokemon) {
     return `
         <li class="${pokemon.types[0].type.name}">
-            <a class="no-link-style" onclick="pokemonSpecified(${pokemon.order});">
-                <span class="number">#${pokemon.order}</span>
+            <a class="no-link-style" onclick="pokemonSpecified(${pokemon.id});">
+                <span class="number">#${pokemon.id}</span>
                 <span class="name">${pokemon.name}</span>
                 <div class="details">
                     <div class="poke-types">
@@ -66,9 +67,8 @@ function allTheTypes(pokemonTypes) {
 }
 
 const listaPokemonOl = document.getElementById('listaPokemons');
-const loadMoreBtn = document.getElementById('loadMoreButton');
 
-pokeApi.getPokemons()
+pokeApi.getPokemons(offset, limit)
     .then(function (pokemons = [] ) { // apenas para caso não retorne nada, estarei deixando uma lista criada por padrão
         const newList = pokemons.map(function (pokemon){ // método map substitui um for, é usado para percorrer toda lista
                 return convertendoJsonPokemonToHtml(pokemon);
@@ -82,8 +82,8 @@ function loadMoreButton(offset, limit) {
         const newHtml = pokemons.map(function (pokemon) { 
             return `
             <li class="${pokemon.types[0].type.name}">
-                <a class="no-link-style" onclick="pokemonSpecified(${pokemon.order});">
-                    <span class="number">#${pokemon.order}</span>
+                <a class="no-link-style" onclick="pokemonSpecified(${pokemon.id});">
+                    <span class="number">#${pokemon.id}</span>
                     <span class="name">${pokemon.name}</span>
                     <div class="details">
                         <div class="poke-types">
@@ -110,8 +110,8 @@ window.onscroll = function() {
     scrollTimeout = setTimeout(function() {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             console.log("you're at the bottom of the page");
-            console.log(`${offset} + ${limit} = ${offset+limit}`);
-            offset += limit;
+            offset += 10;
+            limit = limit + 10
             loadMoreButton(offset, limit);  
         }
     }, 800);
@@ -124,7 +124,6 @@ function pokemonSpecified(pokemon) {
             responseJson = response.json(); // transformando response em json para que possa ser manipulado
             return responseJson;
         }).then(function (pokemon) {
-            console.log(pokemon)
             window.location.href = `pokemon.html?url=${url}`
         })
 }

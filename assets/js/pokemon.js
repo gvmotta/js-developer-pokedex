@@ -23,7 +23,7 @@ function allTheTypesTd(pokemonTypes) {
 function allTheAbilities(pokemonAbilities) {
     return pokemonAbilities.map(function (ability) {
         return `
-            <td class="capitalize">${ability.ability.name}</td>
+            ${ability.ability.name}
         `
     })
 }
@@ -33,8 +33,12 @@ fetch(url)
         responseJson = response.json(); // transformando response em json para que possa ser manipulado
         return responseJson;
     }).then(function (pokemon) {
+        let hp = pokemon.stats[0].base_stat;
+        let attack = pokemon.stats[1].base_stat;
+        let defense = pokemon.stats[2].base_stat;
+        let speed = pokemon.stats[5].base_stat;
         return `
-        <section class="${pokemon.types[0].type.name}">
+        <section class="${pokemon.types[0].type.name} sectionPokemon">
             <header>
                 <a href="./"><i class="fa-solid fa-arrow-left"></i></a>
                 <i class="fa-regular fa-heart"></i>
@@ -52,16 +56,13 @@ fetch(url)
                             <p class="number">#${pokemon.order}</p>
                         </div>
                     </div>
-                    <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}" class="poke-img">
+                    <div class="poke-container">
+                        <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}" class="poke-img">
+                    </div>
                     <img class="pokeball-img" src="assets/img/poke_ball_icon.png" alt="">
                 </div>
                 <div class="bot-side">
-                    <nav class="nav-bar">
-                        <p class="about">About</p>
-                        <p class="attacks">Ataques</p>
-                        <p class="evolutions">Evoluções</p>
-                        <p class="about">About</p>
-                    </nav>
+                    <span class="about">Sobre</span>
                     <table class="first-table">
                         <tbody>
                         <tr>
@@ -70,33 +71,40 @@ fetch(url)
                         </tr>
                         <tr>
                             <td class="info">Altura:</td>
-                            <td>${pokemon.height} metros</td>
+                            <td>${pokemon.height}m</td>
                         </tr>
                         <tr>
                             <td class="info">Peso:</td>
-                            <td>${pokemon.weight} kilogramas</td>
+                            <td>${pokemon.weight} kg</td>
                         </tr>
                         <tr>
                             <td class="info">Habilidades:</td>
-                            ${allTheAbilities(pokemon.abilities).join('')}
+                            <td class="capitalize">${allTheAbilities(pokemon.abilities).join(', ')}</td>
                         </tr>
                         </tbody>
                     </table>
-                    <span class="breeding">Breeding</span>
+                    <span class="breeding">Status Base</span>
                     <table class="second-table">
                         <tbody>
                             <tr>
-                                <td class="info">Gender</td>
-                                <td>Masc</td>
-                                <td>Fem</td>
+                                <td class="info">Vida</td>
+                                <td class="stat">${hp}</td>
+                                <td><div class="bar"><div class="bar-stat red" style="width: ${hp*2}px"></div></div></td>
                             </tr>
                             <tr>
-                                <td class="info">Egg Campus</td>
-                                <td>Monster</td>
+                                <td class="info">Ataque</td>
+                                <td class="stat">${attack}</td>
+                                <td><div class="bar"><div class="bar-stat green" style="width: ${attack*2}px"></div></div></td>
                             </tr>
                             <tr>
-                                <td class="info">Egg Cycle</td>
-                                <td>Grass</td>
+                                <td class="info">Defesa</td>
+                                <td class="stat">${defense}</td>
+                                <td><div class="bar"><div class="bar-stat green" style="width: ${defense*2}px"></div></div></td>
+                            </tr>
+                            <tr>
+                                <td class="info">Velocidade</td>
+                                <td class="stat">${speed}</td>
+                                <td><div class="bar"><div class="bar-stat green" style="width: ${speed*2}px"></div></div></td>
                             </tr>
                         </tbody>
                     </table>
