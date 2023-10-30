@@ -15,20 +15,24 @@ h1 {
     display: flex;
     justify-content: space-between;
 }
+.pokemon-info {
+    position: relative;
+}
 .top-side {
     color: white;
     margin: 0 20px 250px;
-    position: relative;
+    height: 100%;
+    width: 100%;
 }
 .top-side .pokemon-name {
     font-size: 2rem;    
     margin: 1rem 0;
+    text-transform: capitalize;
 }
-.top-side .type {
-    padding: 4px 12px;
-    margin: 0 2px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
+.poke-types span {
+    font-size: 16px!important;
+    margin: 0.5rem;
+    padding: 3px 12px;
 }
 .right-side {
     display: flex;
@@ -40,12 +44,9 @@ h1 {
 }
 .poke-img {
     position: absolute;
-    display: block;
-    margin: 2rem auto 0;
-    top: 90px;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
     z-index: 1;
 }
 .pokeball-img {
@@ -91,4 +92,10 @@ td {
 .second-table {
     padding-top: 1rem;
     padding-bottom: 1rem;
+}
+.capitalize {
+    text-transform: capitalize;
+}
+.poke-name {
+    margin-bottom: .9rem;
 }

@@ -114,18 +114,17 @@ window.onscroll = function() {
             offset += limit;
             loadMoreButton(offset, limit);  
         }
-    }, 1000);
+    }, 800);
 };
 
 function pokemonSpecified(pokemon) {
-    const pokemonSpecified = document.getElementById("pokemonSpecified");
-    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+    fetch(url)
         .then(function (response) { // quando dar o fetch, retorna response
             responseJson = response.json(); // transformando response em json para que possa ser manipulado
             return responseJson;
         }).then(function (pokemon) {
             console.log(pokemon)
-            // Redirecionar para outra página com parâmetros
-            window.location.href = `pokemon.html?name=${pokemon.name}&type1=${pokemon.types[0].type.name}&type2=${pokemon.types[1].type.name}&number=${pokemon.order}`;
+            window.location.href = `pokemon.html?url=${url}`
         })
 }
