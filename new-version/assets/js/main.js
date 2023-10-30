@@ -1,33 +1,12 @@
 const pokeApi = {}
-const offset = 0;
+let offset = 0;
 const limit = 10;
-
-class Pokemon {
-    number;
-    name;
-    color;
-    types = []
-}
-
-function convertPokeApiDetailToPokemon(pokeDetail) {
-    const pokemon = new Pokemon();
-    pokemon.number = pokeDetail.order;
-    pokemon.name = pokeDetail.name;
-    const types = pokeDetail.types.map(function (specificType) {
-        specificType.type.name;
-    })
-    const [type] = types;
-    pokemon.types = types;
-    pokemon.type = type;
-    pokemon.photo = pokeDetail.sprites.other.dream_world.front_default;
-    return pokemon;
-}
 
 pokeApi.getPokemonDetail = function (pokemon) {
     return fetch(pokemon.url) // caminha por todos os pokemons, e retorna o fetch de cada um deles
         .then(function (response) {
             return response.json(); // transforma o fetch de cada pokemon em json
-        }).then(convertPokeApiDetailToPokemon)
+        })
 }
 
 pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons para pokeApi
@@ -58,18 +37,16 @@ pokeApi.getPokemons = function(offset, limit) { // criando o método getPokemons
 
 function convertendoJsonPokemonToHtml(pokemon) {
     return `
-        <li class="grass">
-            <a class="no-link-style" href="#">
-                <span class="number">${pokemon.order}</span>
+        <li class="${pokemon.types[0].type.name}">
+            <a class="no-link-style" onclick="pokemonSpecified(${pokemon.order});">
+                <span class="number">#${pokemon.order}</span>
                 <span class="name">${pokemon.name}</span>
                 <div class="details">
                     <div class="poke-types">
-                        ${pokemon.types.map(function (type) {
-                            return '<li class="type">${type}</li>';
-                        }).join('')}
+                        ${allTheTypes(pokemon.types).join('')}
                     </div>
                     <div class="pokemon-img">
-                        <img src="${pokemon.photo}" alt="${pokemon.name}">
+                        <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
                     </div>
                 </div>
                 <div class="pokeball-img">
@@ -80,14 +57,75 @@ function convertendoJsonPokemonToHtml(pokemon) {
     `
 }
 
+function allTheTypes(pokemonTypes) {
+    return pokemonTypes.map(function (type){
+        return `
+            <span class="type ${type.type.name}">${type.type.name}</span>
+        `
+        })
+}
+
 const listaPokemonOl = document.getElementById('listaPokemons');
+const loadMoreBtn = document.getElementById('loadMoreButton');
 
 pokeApi.getPokemons()
-.then(function (pokemons = [] ) { // apenas para caso não retorne nada, estarei deixando uma lista criada por padrão
-    const newList = pokemons.map(function (pokemon){ // método map substitui um for, é usado para percorrer toda lista
-            return convertendoJsonPokemonToHtml(pokemon);
-        })
-    const newHtml = newList.join('') // pega a lista newList, onde estão a lista de todos os elementos htmls com todos os pokemons, e junta nesta lista newHtml
-    listaPokemonOl.innerHTML = newHtml // joga no html da listaPokemonOl
-})
+    .then(function (pokemons = [] ) { // apenas para caso não retorne nada, estarei deixando uma lista criada por padrão
+        const newList = pokemons.map(function (pokemon){ // método map substitui um for, é usado para percorrer toda lista
+                return convertendoJsonPokemonToHtml(pokemon);
+            })
+        const newHtml = newList.join('') // pega a lista newList, onde estão a lista de todos os elementos htmls com todos os pokemons, e junta nesta lista newHtml
+        listaPokemonOl.innerHTML = newHtml // joga no html da listaPokemonOl
+    })
+ 
+function loadMoreButton(offset, limit) {
+    pokeApi.getPokemons(offset, limit).then(function (pokemons = []){
+        const newHtml = pokemons.map(function (pokemon) { 
+            return `
+            <li class="${pokemon.types[0].type.name}">
+                <a class="no-link-style" onclick="pokemonSpecified(${pokemon.order});">
+                    <span class="number">#${pokemon.order}</span>
+                    <span class="name">${pokemon.name}</span>
+                    <div class="details">
+                        <div class="poke-types">
+                            ${allTheTypes(pokemon.types).join('')}
+                        </div>
+                        <div class="pokemon-img">
+                            <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
+                        </div>
+                    </div>
+                    <div class="pokeball-img">
+                        <img src="assets/img/poke_ball_icon.png" alt="Pokeball background image">
+                    </div>
+                </a>
+            </li> `
+        }).join('');
+        listaPokemonOl.innerHTML += newHtml
+    })
+}
 
+let scrollTimeout;
+
+window.onscroll = function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            console.log("you're at the bottom of the page");
+            console.log(`${offset} + ${limit} = ${offset+limit}`);
+            offset += limit;
+            loadMoreButton(offset, limit);  
+        }
+    }, 1000);
+};
+
+function pokemonSpecified(pokemon) {
+    const pokemonSpecified = document.getElementById("pokemonSpecified");
+    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+        .then(function (response) { // quando dar o fetch, retorna response
+            responseJson = response.json(); // transformando response em json para que possa ser manipulado
+            return responseJson;
+        }).then(function (pokemon) {
+            console.log(pokemon)
+            // Redirecionar para outra página com parâmetros
+            window.location.href = `pokemon.html?name=${pokemon.name}&type1=${pokemon.types[0].type.name}&type2=${pokemon.types[1].type.name}&number=${pokemon.order}`;
+        })
+}
