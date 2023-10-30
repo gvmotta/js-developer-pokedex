@@ -1,2 +1,2 @@
 # Trilha JS Developer - Pokedex
-![Pokex](assets/photo.jpg)  
+![Pokex](assets/photo2.jpg)  
